@@ -32,10 +32,12 @@ namespace BettingWallet.Core.Implementation
                     {
                         return;
                     }
-                } catch (InvalidOperationException e)
+                } 
+                catch (InvalidOperationException e)
                 {
                     _notifier(e.Message);
-                } catch (Exception e)
+                } 
+                catch (Exception e)
                 {
                     _notifier($"Something went wrong on our end, please try again! {e.Message}");
                 }
