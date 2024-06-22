@@ -9,7 +9,7 @@
         public const string SUBMIT_ACTION_MESSAGE = "Please, submit action";
         public const string DEPOSIT_MESSAGE = "Your deposit of ${0:F2} was successful. Your current balance is ${1:F2}";
         public const string UNSUPPORTED_COMMAND_MESSAGE = $"Invalid command. Supported commands are: {BET}, {WITHDRAW}, {DEPOSIT}, {EXIT}";
-        public const string INVALID_OPERATION_MESSAGE = "In order to perform {0} you need to provide the second amount argument";
+        public const string INVALID_ARGUMENT_OPERATION_MESSAGE = "In order to {0} you need to provide amount";
         public const string AMOUNT_OUT_OF_RANGE_MESSAGE = "Bet amount must be between $1 and $10";
 
         public const decimal MIN_BETTING_AMOUNT = 1m;

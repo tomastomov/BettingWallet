@@ -66,22 +66,23 @@ namespace BettingWallet.Tests.Betting
         }
 
         [Test]
-        public void Start_ShouldHandleInvalidOperationException()
+        public void Start_ShouldHandleInvalidAmountArgument()
         {
             var mockBalanceManager = new Mock<IBalanceManager>();
             var mockBettingService = new Mock<IBettingService>();
             var mockInputReader = new Mock<IInputReader>();
             var mockNotifier = new Mock<Action<string>>();
+            var command = "bet";
 
             mockInputReader.SetupSequence(reader => reader.ReadLine())
-                           .Returns("bet abc")
+                           .Returns($"{command} abc")
                            .Returns("exit");
 
             var bettingGame = new BettingGame(mockBalanceManager.Object, mockBettingService.Object, mockInputReader.Object, mockNotifier.Object);
 
             bettingGame.Start();
 
-            mockNotifier.Verify(n => n(It.Is<string>(msg => msg.Contains("Something went wrong on our end"))), Times.Once);
+            mockNotifier.Verify(n => n(string.Format(INVALID_ARGUMENT_OPERATION_MESSAGE, command)), Times.Once);
         }
     }
 }

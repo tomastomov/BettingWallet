@@ -51,43 +51,56 @@ namespace BettingWallet.Core.Implementation
         {
             if (commandInput == null || commandInput.Length == 0)
             {
-                _notifier(UNSUPPORTED_COMMAND_MESSAGE);
-                return ProcessingResult.CONTINUE;
+                return NotifyUnSupportedCommand();
             }
 
             var commandType = commandInput[0];
 
-            if (commandType != EXIT && commandInput.Length < 2)
+            if (commandType == EXIT)
             {
-                _notifier(string.Format(INVALID_OPERATION_MESSAGE, commandType));
-                return ProcessingResult.CONTINUE;
+                _notifier(EXIT_MESSAGE);
+                return ProcessingResult.EXIT;
             }
 
-            var amount = commandInput.Length > 1 ? decimal.Parse(commandInput[1]) : 0;
-
-            ICommand command = null;
-
-            switch (commandType)
+            if (commandInput.Length < 2)
             {
-                case EXIT:
-                    _notifier(EXIT_MESSAGE);
-                    return ProcessingResult.EXIT;
-                case DEPOSIT:
-                    command = new DepositCommand(_balanceManager, _notifier);
-                    break;
-                case BET:
-                    command = new BetCommand(_balanceManager, _bettingService, _notifier);
-                    break;
-                case WITHDRAW:
-                    command = new WithdrawCommand(_balanceManager, _notifier);
-                    break;
-                default:
-                    _notifier(UNSUPPORTED_COMMAND_MESSAGE);
-                    return ProcessingResult.CONTINUE;
+                return NotifyInvalidArgument(commandType);
             }
 
-            command?.Execute(new CommandExecutionContext { Amount = amount });
+            if (!decimal.TryParse(commandInput[1], out var amount))
+            {
+                return NotifyInvalidArgument(commandType);
+            }
 
+            ICommand command = GetComamnd(commandType);
+
+            if (command == null)
+            {
+                return NotifyUnSupportedCommand();
+            }
+
+            command.Execute(new CommandExecutionContext { Amount = amount });
+
+            return ProcessingResult.CONTINUE;
+        }
+
+        private ICommand GetComamnd(string commandType) => commandType switch
+        {
+            DEPOSIT => new DepositCommand(_balanceManager, _notifier),
+            BET => new BetCommand(_balanceManager, _bettingService, _notifier),
+            WITHDRAW => new WithdrawCommand(_balanceManager, _notifier),
+            _ => null,
+        };
+
+        private ProcessingResult NotifyUnSupportedCommand()
+        {
+            _notifier(UNSUPPORTED_COMMAND_MESSAGE);
+            return ProcessingResult.CONTINUE;
+        }
+
+        private ProcessingResult NotifyInvalidArgument(string commandType)
+        {
+            _notifier(string.Format(INVALID_ARGUMENT_OPERATION_MESSAGE, commandType));
             return ProcessingResult.CONTINUE;
         }
     }
