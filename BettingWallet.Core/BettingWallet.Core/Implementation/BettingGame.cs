@@ -1,5 +1,6 @@
 ﻿using BettingWallet.Core.Contracts;
 using BettingWallet.Core.Implementation.Commands;
+using static BettingWallet.Core.Constants;
 
 namespace BettingWallet.Core.Implementation
 {
@@ -7,12 +8,14 @@ namespace BettingWallet.Core.Implementation
     {
         private readonly IBalanceManager _balanceManager;
         private readonly IBettingService _bettingService;
+        private readonly IInputReader _inputReader;
         private readonly Action<string> _notifier;
 
-        public BettingGame(IBalanceManager balanceManager, IBettingService bettingService, Action<string> notifier)
+        public BettingGame(IBalanceManager balanceManager, IBettingService bettingService, IInputReader inputReader, Action<string> notifier)
         {
             _balanceManager = balanceManager;
             _bettingService = bettingService;
+            _inputReader = inputReader;
             _notifier = notifier;
         }
 
@@ -22,9 +25,9 @@ namespace BettingWallet.Core.Implementation
             {
                 try
                 {
-                    _notifier(Constants.SUBMIT_ACTION_MESSAGE);
+                    _notifier(SUBMIT_ACTION_MESSAGE);
 
-                    var commandInput = Console.ReadLine()?.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
+                    var commandInput = _inputReader.ReadLine()?.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
 
                     var processingResult = ProcessCommand(commandInput);
 
@@ -48,15 +51,15 @@ namespace BettingWallet.Core.Implementation
         {
             if (commandInput == null || commandInput.Length == 0)
             {
-                _notifier(Constants.UNSUPPORTED_COMMAND_MESSAGE);
+                _notifier(UNSUPPORTED_COMMAND_MESSAGE);
                 return ProcessingResult.CONTINUE;
             }
 
             var commandType = commandInput[0];
 
-            if (commandType != Constants.EXIT && commandInput.Length < 2)
+            if (commandType != EXIT && commandInput.Length < 2)
             {
-                _notifier(string.Format(Constants.INVALID_OPERATION_MESSAGE, commandType));
+                _notifier(string.Format(INVALID_OPERATION_MESSAGE, commandType));
                 return ProcessingResult.CONTINUE;
             }
 
@@ -66,20 +69,20 @@ namespace BettingWallet.Core.Implementation
 
             switch (commandType)
             {
-                case Constants.EXIT:
-                    _notifier(Constants.EXIT_MESSAGE);
+                case EXIT:
+                    _notifier(EXIT_MESSAGE);
                     return ProcessingResult.EXIT;
-                case Constants.DEPOSIT:
+                case DEPOSIT:
                     command = new DepositCommand(_balanceManager, _notifier);
                     break;
-                case Constants.BET:
+                case BET:
                     command = new BetCommand(_balanceManager, _bettingService, _notifier);
                     break;
-                case Constants.WITHDRAW:
+                case WITHDRAW:
                     command = new WithdrawCommand(_balanceManager, _notifier);
                     break;
                 default:
-                    _notifier(Constants.UNSUPPORTED_COMMAND_MESSAGE);
+                    _notifier(UNSUPPORTED_COMMAND_MESSAGE);
                     return ProcessingResult.CONTINUE;
             }
 

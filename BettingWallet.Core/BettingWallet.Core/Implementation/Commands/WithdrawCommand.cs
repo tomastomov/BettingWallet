@@ -1,4 +1,5 @@
 ﻿using BettingWallet.Core.Contracts;
+using static BettingWallet.Core.Constants;
 
 namespace BettingWallet.Core.Implementation.Commands
 {
@@ -15,7 +16,7 @@ namespace BettingWallet.Core.Implementation.Commands
         public void Execute(CommandExecutionContext context)
         {
             _balanceManager.Subtract(context.Amount);
-            _notifier?.Invoke(string.Format(Constants.WITHDRAWAL_MESSAGE, context.Amount, _balanceManager.Balance));
+            _notifier?.Invoke(string.Format(WITHDRAWAL_MESSAGE, context.Amount, _balanceManager.Balance));
         }
     }
 }

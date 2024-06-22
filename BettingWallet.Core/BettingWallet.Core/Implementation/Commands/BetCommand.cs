@@ -1,5 +1,6 @@
 ﻿using BettingWallet.Core.Contracts;
 using BettingWallet.Core.Implementation.Betting;
+using static BettingWallet.Core.Constants;
 
 namespace BettingWallet.Core.Implementation.Commands
 {
@@ -18,9 +19,9 @@ namespace BettingWallet.Core.Implementation.Commands
         {
             var amount = context.Amount;
 
-            if (amount < Constants.MIN_BETTING_AMOUNT || amount > Constants.MAX_BETTING_AMOUNT)
+            if (amount < MIN_BETTING_AMOUNT || amount > MAX_BETTING_AMOUNT)
             {
-                _notifier?.Invoke(Constants.AMOUNT_OUT_OF_RANGE_MESSAGE);
+                _notifier?.Invoke(AMOUNT_OUT_OF_RANGE_MESSAGE);
                 return;
             }
 
@@ -30,13 +31,13 @@ namespace BettingWallet.Core.Implementation.Commands
 
             if (betResult.Type == BetResultType.Loss)
             {
-                _notifier?.Invoke(string.Format(Constants.BET_LOSS_MESSAGE, _balanceManager.Balance));
+                _notifier?.Invoke(string.Format(BET_LOSS_MESSAGE, _balanceManager.Balance));
                 return;
             }
 
             _balanceManager.Add(betResult.AmountWon ?? 0m);
 
-            _notifier.Invoke(string.Format(Constants.BET_WIN_MESSAGE, betResult.AmountWon, _balanceManager.Balance));
+            _notifier.Invoke(string.Format(BET_WIN_MESSAGE, betResult.AmountWon, _balanceManager.Balance));
         }
     }
 }

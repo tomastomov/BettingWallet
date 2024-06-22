@@ -1,4 +1,5 @@
 ﻿using BettingWallet.Core.Contracts;
+using static BettingWallet.Core.Constants;
 
 namespace BettingWallet.Core.Implementation.Betting
 {
@@ -29,7 +30,7 @@ namespace BettingWallet.Core.Implementation.Betting
 
         private bool IsBetLost(int odd)
         {
-            return odd <= Constants.WIN_THRESHOLD;
+            return odd <= WIN_THRESHOLD;
         }
     }
 }

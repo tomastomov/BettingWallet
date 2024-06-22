@@ -1,4 +1,5 @@
 ﻿using BettingWallet.Core.Contracts;
+using static BettingWallet.Core.Constants;
 
 namespace BettingWallet.Core.Implementation.Betting
 {
@@ -19,7 +20,7 @@ namespace BettingWallet.Core.Implementation.Betting
         }
 
         private decimal GenerateCoefficient(decimal odd)
-            => odd <= Constants.UP_TO_TWO_TIMES_WIN_THRESHOLD ? GenerateCoefficient(1m, 2m) : GenerateCoefficient(2m, 10m); 
+            => odd <= UP_TO_TWO_TIMES_WIN_THRESHOLD ? GenerateCoefficient(1m, 2m) : GenerateCoefficient(2m, 10m); 
 
         private decimal GenerateCoefficient(decimal min, decimal max)
         {
