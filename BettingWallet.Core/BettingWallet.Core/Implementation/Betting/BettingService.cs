@@ -5,6 +5,9 @@ namespace BettingWallet.Core.Implementation.Betting
 {
     public class BettingService : IBettingService
     {
+        private const int MIN_ODD = 1;
+        private const int MAX_ODD = 100;
+
         private readonly IOddsGenerator _oddsGenerator;
         private readonly IEarningsCalculator _earningsCalculator;
 
@@ -16,7 +19,7 @@ namespace BettingWallet.Core.Implementation.Betting
 
         public BetResult Bet(decimal amount)
         {
-            var odd = _oddsGenerator.Generate(1, 100);
+            var odd = _oddsGenerator.Generate(MIN_ODD, MAX_ODD);
 
             if (IsBetLost(odd))
             {
