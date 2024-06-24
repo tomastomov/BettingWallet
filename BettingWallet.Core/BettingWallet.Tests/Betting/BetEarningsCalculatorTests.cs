@@ -10,14 +10,20 @@ namespace BettingWallet.Tests.Betting
         [Test]
         public void Calculate_ShouldReturnTheAmountWonCorrectly()
         {
-            var mockOddsGenerator = new Mock<IOddsGenerator>();
-            mockOddsGenerator.Setup(og => og.GenerateFraction()).Returns(0.25m);
+            var mockRandomGenerator = new Mock<IRandomGenerator>();
+            int lower = 1;
+            int upper = 2;
+            var amount = 10;
+            var integerCoefficient = 1;
+            var fractionalCoefficient = 0.25m;
+            mockRandomGenerator.Setup(og => og.GenerateCoefficient(lower, upper)).Returns(integerCoefficient);
+            mockRandomGenerator.Setup(og => og.GenerateFractionalCoefficient()).Returns(fractionalCoefficient);
 
-            var earningsCalculator = new BetEarningsCalculator(mockOddsGenerator.Object);
+            var earningsCalculator = new BetEarningsCalculator(mockRandomGenerator.Object);
 
-            var result = earningsCalculator.Calculate(10, 5);
+            var result = earningsCalculator.Calculate(amount, lower, upper);
 
-            Assert.AreEqual(11.25, result);
+            Assert.AreEqual(amount * (integerCoefficient + fractionalCoefficient), result);
         }
     }
 }

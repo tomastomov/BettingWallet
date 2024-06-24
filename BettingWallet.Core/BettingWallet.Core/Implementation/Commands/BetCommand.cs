@@ -8,36 +8,38 @@ namespace BettingWallet.Core.Implementation.Commands
     {
         private readonly IBalanceManager _balanceManager;
         private readonly IBettingService _bettingService;
-        private readonly Action<string> _notifier;
-        public BetCommand(IBalanceManager balanceManager, IBettingService bettingService, Action<string> notifier)
+        private readonly Action<string> _notify;
+        private readonly decimal _amount;
+
+        public BetCommand(IBalanceManager balanceManager, IBettingService bettingService, Action<string> notify, decimal amount)
         {
             _balanceManager = balanceManager;
             _bettingService = bettingService;
-            _notifier = notifier;
+            _notify = notify;
+            _amount = amount;
         }
-        public void Execute(CommandExecutionContext context)
-        {
-            var amount = context.Amount;
 
-            if (amount < MIN_BETTING_AMOUNT || amount > MAX_BETTING_AMOUNT)
+        public void Execute()
+        {
+            if (_amount < MIN_BETTING_AMOUNT || _amount > MAX_BETTING_AMOUNT)
             {
-                _notifier?.Invoke(AMOUNT_OUT_OF_RANGE_MESSAGE);
+                _notify?.Invoke(AMOUNT_OUT_OF_RANGE_MESSAGE);
                 return;
             }
 
-            _balanceManager.Subtract(amount);
+            _balanceManager.Withdraw(_amount);
 
-            var betResult = _bettingService.Bet(amount);
+            var betResult = _bettingService.Bet(_amount);
 
             if (betResult.Type == BetResultType.Loss)
             {
-                _notifier?.Invoke(string.Format(BET_LOSS_MESSAGE, _balanceManager.Balance));
+                _notify?.Invoke(string.Format(BET_LOSS_MESSAGE, _balanceManager.Balance));
                 return;
             }
 
-            _balanceManager.Add(betResult.AmountWon ?? 0m);
+            _balanceManager.Deposit(betResult.AmountWon ?? 0m);
 
-            _notifier.Invoke(string.Format(BET_WIN_MESSAGE, betResult.AmountWon, _balanceManager.Balance));
+            _notify.Invoke(string.Format(BET_WIN_MESSAGE, betResult.AmountWon, _balanceManager.Balance));
         }
     }
 }

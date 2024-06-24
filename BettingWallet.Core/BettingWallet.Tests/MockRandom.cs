@@ -14,12 +14,12 @@ namespace BettingWallet.Tests
             _doubleValues = new Queue<double>();
         }
 
-        public void AddInt(int value)
+        public void DepositInt(int value)
         {
             _intValues.Enqueue(value);
         }
 
-        public void AddDouble(double value)
+        public void DepositDouble(double value)
         {
             _doubleValues.Enqueue(value);
         }

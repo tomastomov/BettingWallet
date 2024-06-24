@@ -1,9 +1,7 @@
-﻿using BettingWallet.Core.Implementation.Commands;
-
-namespace BettingWallet.Core.Contracts
+﻿namespace BettingWallet.Core.Contracts
 {
     public interface ICommand
     {
-        void Execute(CommandExecutionContext context);
+        void Execute();
     }
 }

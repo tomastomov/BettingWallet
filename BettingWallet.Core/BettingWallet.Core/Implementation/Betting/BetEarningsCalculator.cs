@@ -1,32 +1,26 @@
 ﻿using BettingWallet.Core.Contracts;
-using static BettingWallet.Core.Constants;
 
 namespace BettingWallet.Core.Implementation.Betting
 {
     public class BetEarningsCalculator : IEarningsCalculator
     {
-        private readonly IOddsGenerator _oddsGenerator;
+        private readonly IRandomGenerator _randomGenerator;
 
-        public BetEarningsCalculator(IOddsGenerator oddsGenerator)
+        public BetEarningsCalculator(IRandomGenerator randomGenerator)
         {
-            _oddsGenerator = oddsGenerator;
+            _randomGenerator = randomGenerator;
         }
 
-        public decimal Calculate(decimal amount, int odd)
+        public decimal Calculate(decimal amount, int lower, int upper)
         {
-            var winAmount = amount + GenerateCoefficient(odd);
+            decimal coefficient = _randomGenerator.GenerateCoefficient(lower, upper);
 
-            return winAmount;
-        }
+            if (coefficient != upper)
+            {
+                coefficient += _randomGenerator.GenerateFractionalCoefficient();
+            }
 
-        private decimal GenerateCoefficient(decimal odd)
-            => odd <= UP_TO_TWO_TIMES_WIN_THRESHOLD ? GenerateCoefficient(1m, 2m) : GenerateCoefficient(2m, 10m); 
-
-        private decimal GenerateCoefficient(decimal min, decimal max)
-        {
-            var coefficient = _oddsGenerator.GenerateFraction() * (max - min) + min;
-
-            return Math.Round(coefficient, 2);
+            return amount * coefficient;
         }
     }
 }

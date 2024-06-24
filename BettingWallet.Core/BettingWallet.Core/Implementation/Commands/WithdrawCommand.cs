@@ -7,16 +7,19 @@ namespace BettingWallet.Core.Implementation.Commands
     {
         private readonly IBalanceManager _balanceManager;
         private readonly Action<string> _notifier;
-        public WithdrawCommand(IBalanceManager balanceManager, Action<string> notifier)
+        private readonly decimal _amount;
+
+        public WithdrawCommand(IBalanceManager balanceManager, Action<string> notifier, decimal amount)
         {
             _balanceManager = balanceManager;
             _notifier = notifier;
+            _amount = amount;
         }
 
-        public void Execute(CommandExecutionContext context)
+        public void Execute()
         {
-            _balanceManager.Subtract(context.Amount);
-            _notifier?.Invoke(string.Format(WITHDRAWAL_MESSAGE, context.Amount, _balanceManager.Balance));
+            _balanceManager.Withdraw(_amount);
+            _notifier?.Invoke(string.Format(WITHDRAWAL_MESSAGE, _amount, _balanceManager.Balance));
         }
     }
 }

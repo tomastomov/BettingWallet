@@ -7,54 +7,54 @@ namespace BettingWallet.Tests.Balance
     public class BalanceManagerTests
     {
         [Test]
-        public void Add_ShouldIncreaseTheBalanceCorrectly()
+        public void Deposit_ShouldIncreaseTheBalanceCorrectly()
         {
             var balanceManager = new BalanceManager();
             var amount = 10;
 
-            balanceManager.Add(amount);
+            balanceManager.Deposit(amount);
 
             Assert.AreEqual(amount, balanceManager.Balance);
         }
 
         [Test]
-        public void Add_ShouldThrowIfAmountIsNegative()
+        public void Deposit_ShouldThrowIfAmountIsNegative()
         {
             var balanceManager = new BalanceManager();
             var amount = -10;
 
-            Assert.Throws<InvalidOperationException>(() => balanceManager.Add(amount));
+            Assert.Throws<InvalidOperationException>(() => balanceManager.Deposit(amount));
         }
 
         [Test]
-        public void Subtract_ShouldDecreaseAmountCorrectlyIfThereIsEnoughBalance()
+        public void Withdraw_ShouldDecreaseAmountCorrectlyIfThereIsEnoughBalance()
         {
             var balanceManager = new BalanceManager();
             var amount = 10;
             var balanceAmount = 20;
 
-            balanceManager.Add(balanceAmount);
-            balanceManager.Subtract(amount);
+            balanceManager.Deposit(balanceAmount);
+            balanceManager.Withdraw(amount);
 
             Assert.AreEqual(balanceAmount - amount, balanceManager.Balance);
         }
 
         [Test]
-        public void Subtract_ShouldThrowIfAmountIsBiggerThanBalance()
+        public void Withdraw_ShouldThrowIfAmountIsBiggerThanBalance()
         {
             var balanceManager = new BalanceManager();
             var amount = 10;
 
-            Assert.Throws<InvalidOperationException>(() => balanceManager.Subtract(amount));
+            Assert.Throws<InvalidOperationException>(() => balanceManager.Withdraw(amount));
         }
 
         [Test]
-        public void Subtract_ShouldThrowIfAmountIsNegative()
+        public void Withdraw_ShouldThrowIfAmountIsNegative()
         {
             var balanceManager = new BalanceManager();
             var amount = -10;
 
-            Assert.Throws<InvalidOperationException>(() => balanceManager.Add(amount));
+            Assert.Throws<InvalidOperationException>(() => balanceManager.Deposit(amount));
         }
     }
 }

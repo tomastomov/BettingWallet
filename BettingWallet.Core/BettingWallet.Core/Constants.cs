@@ -11,6 +11,7 @@
         public const string UNSUPPORTED_COMMAND_MESSAGE = $"Invalid command. Supported commands are: {BET}, {WITHDRAW}, {DEPOSIT}, {EXIT}";
         public const string INVALID_ARGUMENT_OPERATION_MESSAGE = "In order to {0} you need to provide amount";
         public const string AMOUNT_OUT_OF_RANGE_MESSAGE = "Bet amount must be between $1 and $10";
+        public const string INVALID_NUMBER_OF_PARAMETERS = "Parameters must be between 1 and 2";
 
         public const decimal MIN_BETTING_AMOUNT = 1m;
         public const decimal MAX_BETTING_AMOUNT = 10m;

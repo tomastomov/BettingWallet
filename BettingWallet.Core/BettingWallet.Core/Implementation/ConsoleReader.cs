@@ -4,9 +4,9 @@ namespace BettingWallet.Core.Implementation
 {
     public class ConsoleReader : IInputReader
     {
-        public string ReadLine()
+        public string[] Read()
         {
-            return Console.ReadLine();
+            return Console.ReadLine()?.ToLower().Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>(); ;
         }
     }
 }

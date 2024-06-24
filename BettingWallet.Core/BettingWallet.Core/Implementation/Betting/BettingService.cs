@@ -8,32 +8,37 @@ namespace BettingWallet.Core.Implementation.Betting
         private const int MIN_ODD = 1;
         private const int MAX_ODD = 100;
 
-        private readonly IOddsGenerator _oddsGenerator;
+        private readonly IRandomGenerator _betOutcomeManager;
         private readonly IEarningsCalculator _earningsCalculator;
 
-        public BettingService(IOddsGenerator oddsGenerator, IEarningsCalculator earningsCalculator)
+        public BettingService(IRandomGenerator betOutcomeManager, IEarningsCalculator earningsCalculator)
         {
-            _oddsGenerator = oddsGenerator;
+            _betOutcomeManager = betOutcomeManager;
             _earningsCalculator = earningsCalculator;
         }
 
         public BetResult Bet(decimal amount)
         {
-            var odd = _oddsGenerator.Generate(MIN_ODD, MAX_ODD);
+            var betOutcome = _betOutcomeManager.GenerateOutcome(MIN_ODD, MAX_ODD);
 
-            if (IsBetLost(odd))
+            if (betOutcome == Outcome.Loss)
             {
                 return new BetResult { Type = BetResultType.Loss };
             }
 
-            var amountEarned = _earningsCalculator.Calculate(amount, odd);
+            var coefficients = GetCofficientRange(betOutcome);
+
+            var amountEarned = _earningsCalculator.Calculate(amount, coefficients.coefficientLower, coefficients.coefficientUpper);
 
             return new BetResult { Type = BetResultType.Win, AmountWon = amountEarned };
         }
 
-        private bool IsBetLost(int odd)
-        {
-            return odd <= WIN_THRESHOLD;
-        }
+        private (int coefficientLower, int coefficientUpper) GetCofficientRange(Outcome prediction)
+            => prediction switch
+            {
+                Outcome.WinUpToTwoTimes => (1, 2),
+                Outcome.WinUpToTenTimes => (2, 10),
+                _ => throw new ArgumentException("Not a valid bet outcome"),
+            };
     }
 }

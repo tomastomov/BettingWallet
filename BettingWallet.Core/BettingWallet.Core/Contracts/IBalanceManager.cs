@@ -4,8 +4,8 @@
     {
         decimal Balance { get; }
 
-        void Add(decimal amount);
+        void Deposit(decimal amount);
 
-        void Subtract(decimal amount);
+        void Withdraw(decimal amount);
     }
 }
