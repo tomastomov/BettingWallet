@@ -8,17 +8,28 @@ namespace BettingWallet.Tests.Betting
 {
     public class BettingServiceTests
     {
+        private Mock<IRandomGenerator> _mockRandomGenerator;
+        private Mock<IEarningsCalculator> _mockEarningsCalculator;
+
+        private IBettingService _bettingService;
+
+        [SetUp]
+        public void Setup()
+        {
+            _mockRandomGenerator = new Mock<IRandomGenerator>();
+            _mockEarningsCalculator = new Mock<IEarningsCalculator>();
+            _bettingService = new BettingService(_mockRandomGenerator.Object, _mockEarningsCalculator.Object);
+        }
+        
+
         [Test]
         public void Bet_ShouldPlaceBetAndReturnLossResultCorrectly()
         {
-            var dependencies = GetDependencies();
             var amount = 10;
 
-            dependencies.mockRandomGenerator.Setup(rg => rg.GenerateOutcome(It.IsAny<int>(), It.IsAny<int>())).Returns(Outcome.Loss);
+            _mockRandomGenerator.Setup(rg => rg.GenerateOutcome(It.IsAny<int>(), It.IsAny<int>())).Returns(Outcome.Loss);
 
-            var bettingService = new BettingService(dependencies.mockRandomGenerator.Object, dependencies.mockEarningsCalculator.Object);
-
-            var result = bettingService.Bet(amount);
+            var result = _bettingService.Bet(amount);
 
             Assert.AreEqual(BetResultType.Loss, result.Type);
         }
@@ -26,26 +37,57 @@ namespace BettingWallet.Tests.Betting
         [Test]
         public void Bet_ShouldPlaceBetAndReturnUpToTwoTimesWinCorrectly()
         {
-            var dependencies = GetDependencies();
             var integerCoefficient = 1;
             var fractionalCoefficient = 0.25m;
             var amount = 10;
             var winnings = amount * (integerCoefficient + fractionalCoefficient);
 
-            dependencies.mockRandomGenerator.Setup(rg => rg.GenerateOutcome(It.IsAny<int>(), It.IsAny<int>())).Returns(Outcome.WinUpToTwoTimes);
-            dependencies.mockRandomGenerator.Setup(rg => rg.GenerateCoefficient(1, 2)).Returns(integerCoefficient);
-            dependencies.mockRandomGenerator.Setup(rg => rg.GenerateFractionalCoefficient()).Returns(fractionalCoefficient);
-            dependencies.mockEarningsCalculator.Setup(ec => ec.Calculate(amount, 1, 2)).Returns(winnings);
+            _mockRandomGenerator.Setup(rg => rg.GenerateOutcome(It.IsAny<int>(), It.IsAny<int>())).Returns(Outcome.WinUpToTwoTimes);
+            _mockRandomGenerator.Setup(rg => rg.GenerateCoefficient(1, 2)).Returns(integerCoefficient);
+            _mockRandomGenerator.Setup(rg => rg.GenerateFractionalCoefficient()).Returns(fractionalCoefficient);
+            _mockEarningsCalculator.Setup(ec => ec.Calculate(amount, 1, 2)).Returns(winnings);
 
-            var bettingService = new BettingService(dependencies.mockRandomGenerator.Object, dependencies.mockEarningsCalculator.Object);
-
-            var result = bettingService.Bet(amount);
+            var result = _bettingService.Bet(amount);
 
             Assert.AreEqual(BetResultType.Win, result.Type);
             Assert.AreEqual(winnings, result.AmountWon);
         }
 
-        private (Mock<IRandomGenerator> mockRandomGenerator, Mock<IEarningsCalculator> mockEarningsCalculator) GetDependencies()
-            => (new Mock<IRandomGenerator>(), new Mock<IEarningsCalculator>());
+        [Test]
+        public void Bet_ShouldPlaceBetAndReturnUpToTenTimesWinCorrectly()
+        {
+            var integerCoefficient = 2;
+            var fractionalCoefficient = 0.25m;
+            var amount = 10;
+            var winnings = amount * (integerCoefficient + fractionalCoefficient);
+
+            _mockRandomGenerator.Setup(rg => rg.GenerateOutcome(It.IsAny<int>(), It.IsAny<int>())).Returns(Outcome.WinUpToTenTimes);
+            _mockRandomGenerator.Setup(rg => rg.GenerateCoefficient(1, 2)).Returns(integerCoefficient);
+            _mockRandomGenerator.Setup(rg => rg.GenerateFractionalCoefficient()).Returns(fractionalCoefficient);
+            _mockEarningsCalculator.Setup(ec => ec.Calculate(amount, 2, 10)).Returns(winnings);
+
+            var result = _bettingService.Bet(amount);
+
+            Assert.AreEqual(BetResultType.Win, result.Type);
+            Assert.AreEqual(winnings, result.AmountWon);
+        }
+
+        [Test]
+        public void Bet_ShouldPlaceBetAndReturnTenTimesWinCorrectly()
+        {
+            var integerCoefficient = 10;
+            var fractionalCoefficient = 0m;
+            var amount = 10;
+            var winnings = amount * (integerCoefficient + fractionalCoefficient);
+
+            _mockRandomGenerator.Setup(rg => rg.GenerateOutcome(It.IsAny<int>(), It.IsAny<int>())).Returns(Outcome.WinUpToTenTimes);
+            _mockRandomGenerator.Setup(rg => rg.GenerateCoefficient(1, 2)).Returns(integerCoefficient);
+            _mockEarningsCalculator.Setup(ec => ec.Calculate(amount, 2, 10)).Returns(winnings);
+
+            var result = _bettingService.Bet(amount);
+
+            Assert.AreEqual(BetResultType.Win, result.Type);
+            Assert.AreEqual(winnings, result.AmountWon);
+        }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using BettingWallet.Core.Contracts;
-using static BettingWallet.Core.Constants;
 
 namespace BettingWallet.Core.Implementation.Betting
 {
@@ -8,18 +7,18 @@ namespace BettingWallet.Core.Implementation.Betting
         private const int MIN_ODD = 1;
         private const int MAX_ODD = 100;
 
-        private readonly IRandomGenerator _betOutcomeManager;
+        private readonly IRandomGenerator _randomGenerator;
         private readonly IEarningsCalculator _earningsCalculator;
 
-        public BettingService(IRandomGenerator betOutcomeManager, IEarningsCalculator earningsCalculator)
+        public BettingService(IRandomGenerator randomGenerator, IEarningsCalculator earningsCalculator)
         {
-            _betOutcomeManager = betOutcomeManager;
+            _randomGenerator = randomGenerator;
             _earningsCalculator = earningsCalculator;
         }
 
         public BetResult Bet(decimal amount)
         {
-            var betOutcome = _betOutcomeManager.GenerateOutcome(MIN_ODD, MAX_ODD);
+            var betOutcome = _randomGenerator.GenerateOutcome(MIN_ODD, MAX_ODD);
 
             if (betOutcome == Outcome.Loss)
             {

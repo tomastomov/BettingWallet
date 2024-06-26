@@ -6,20 +6,20 @@ namespace BettingWallet.Core.Implementation.Commands
     public class DepositCommand : ICommand
     {
         private readonly IBalanceManager _balanceManager;
-        private readonly Action<string> _notifier;
+        private readonly Action<string> _notify;
         private readonly decimal _amount;
 
-        public DepositCommand(IBalanceManager balanceManager, Action<string> notifier, decimal amount)
+        public DepositCommand(IBalanceManager balanceManager, Action<string> notify, decimal amount)
         {
             _balanceManager = balanceManager;
-            _notifier = notifier;
+            _notify = notify;
             _amount = amount;
         }
 
         public void Execute()
         {
             _balanceManager.Deposit(_amount);
-            _notifier?.Invoke(string.Format(DEPOSIT_MESSAGE, _amount, _balanceManager.Balance));
+            _notify?.Invoke(string.Format(DEPOSIT_MESSAGE, _amount, _balanceManager.Balance));
         }
     }
 }

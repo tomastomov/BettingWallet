@@ -8,13 +8,13 @@ namespace BettingWallet.Core.Implementation
     {
         private readonly ICommandFactory _commandFactory;
         private readonly IInputReader _inputReader;
-        private readonly Action<string> _notifier;
+        private readonly Action<string> _notify;
 
-        public BettingGame(ICommandFactory commandFactory, IInputReader inputReader, Action<string> notifier)
+        public BettingGame(ICommandFactory commandFactory, IInputReader inputReader, Action<string> notify)
         {
             _commandFactory = commandFactory;
             _inputReader = inputReader;
-            _notifier = notifier;
+            _notify = notify;
         }
 
         public void Start()
@@ -23,7 +23,7 @@ namespace BettingWallet.Core.Implementation
             {
                 try
                 {
-                    _notifier(SUBMIT_ACTION_MESSAGE);
+                    _notify(SUBMIT_ACTION_MESSAGE);
 
                     var commandInput = _inputReader.Read();
 
@@ -38,11 +38,11 @@ namespace BettingWallet.Core.Implementation
                 } 
                 catch (InvalidOperationException e)
                 {
-                    _notifier(e.Message);
+                    _notify(e.Message);
                 } 
                 catch (Exception e)
                 {
-                    _notifier($"Something went wrong on our end, please try again! {e.Message}");
+                    _notify($"Something went wrong on our end, please try again! {e.Message}");
                 }
                 
             }
