@@ -1,4 +1,5 @@
 ﻿using BettingWallet.Core.Contracts;
+using static BettingWallet.Core.Constants;
 
 namespace BettingWallet.Core.Implementation
 {
@@ -32,7 +33,7 @@ namespace BettingWallet.Core.Implementation
         {
             if (amount > _balance)
             {
-                throw new InvalidOperationException("Amount must be less than the balance");
+                throw new InvalidOperationException(INSUFFICIENT_FUNDS_MESSAGE);
             }
         }
 
@@ -40,7 +41,7 @@ namespace BettingWallet.Core.Implementation
         {
             if (amount <= 0)
             {
-                throw new InvalidOperationException("Amount must be a positive number!");
+                throw new InvalidOperationException(AMOUNT_MUST_BE_POSITIVE_MESSAGE);
             }
         }
     }

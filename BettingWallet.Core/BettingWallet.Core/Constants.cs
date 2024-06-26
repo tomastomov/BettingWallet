@@ -13,6 +13,9 @@
         public const string AMOUNT_OUT_OF_RANGE_MESSAGE = "Bet amount must be between $1 and $10";
         public const string INVALID_NUMBER_OF_PARAMETERS = "Parameters must be between 1 and 2";
         public const string UNEXPECTED_ERROR_MESSAGE = "Something went wrong on our end, please try again! {0}";
+        public const string AMOUNT_MUST_BE_POSITIVE_MESSAGE = "Amount must be a positive number!";
+        public const string INSUFFICIENT_FUNDS_MESSAGE = "Insufficient funds";
+        public const string INVALID_OUTCOME_MESSAGE = "Invalid outcome";
 
         public const decimal MIN_BETTING_AMOUNT = 1m;
         public const decimal MAX_BETTING_AMOUNT = 10m;

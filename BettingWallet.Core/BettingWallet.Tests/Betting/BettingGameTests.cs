@@ -144,7 +144,7 @@ namespace BettingWallet.Tests.Betting
                 .Returns(_exitCommand);
 
             _bettingGame.Start();
-            _mockNotify.Verify(n => n($"Something went wrong on our end, please try again! {errorMessage}"), Times.Once);
+            _mockNotify.Verify(n => n(string.Format(UNEXPECTED_ERROR_MESSAGE, errorMessage)), Times.Once);
             VerifySubmitCommandMessage(2);
         }
 

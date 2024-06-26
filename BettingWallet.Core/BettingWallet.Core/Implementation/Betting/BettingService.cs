@@ -39,7 +39,7 @@ namespace BettingWallet.Core.Implementation.Betting
                 Outcome.Loss => (0, 0),
                 Outcome.WinUpToTwoTimes => (UP_TO_TWO_TIMES_COEFFICIENT_LOWER_BOUND, UP_TO_TWO_TIMES_COEFFICIENT_UPPER_BOUND),
                 Outcome.WinUpToTenTimes => (UP_TO_TEN_TIMES_COEFFICIENT_LOWER_BOUND, UP_TO_TEN_TIMES_COEFFICIENT_UPPER_BOUND),
-                _ => throw new ArgumentException("Invalid bet outcome"),
+                _ => throw new ArgumentException(INVALID_OUTCOME_MESSAGE),
             };
     }
 }
