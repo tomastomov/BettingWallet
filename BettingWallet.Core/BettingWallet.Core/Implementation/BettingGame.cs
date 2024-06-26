@@ -42,7 +42,7 @@ namespace BettingWallet.Core.Implementation
                 } 
                 catch (Exception e)
                 {
-                    _notify($"Something went wrong on our end, please try again! {e.Message}");
+                    _notify(string.Format(UNEXPECTED_ERROR_MESSAGE, e.Message));
                 }
                 
             }

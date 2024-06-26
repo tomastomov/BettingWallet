@@ -12,12 +12,18 @@
         public const string INVALID_ARGUMENT_OPERATION_MESSAGE = "In order to {0} you need to provide amount";
         public const string AMOUNT_OUT_OF_RANGE_MESSAGE = "Bet amount must be between $1 and $10";
         public const string INVALID_NUMBER_OF_PARAMETERS = "Parameters must be between 1 and 2";
+        public const string UNEXPECTED_ERROR_MESSAGE = "Something went wrong on our end, please try again! {0}";
 
         public const decimal MIN_BETTING_AMOUNT = 1m;
         public const decimal MAX_BETTING_AMOUNT = 10m;
 
         public const decimal WIN_THRESHOLD = 50m;
         public const decimal UP_TO_TWO_TIMES_WIN_THRESHOLD = 90;
+
+        public const int UP_TO_TWO_TIMES_COEFFICIENT_LOWER_BOUND = 1;
+        public const int UP_TO_TWO_TIMES_COEFFICIENT_UPPER_BOUND = 2;
+        public const int UP_TO_TEN_TIMES_COEFFICIENT_LOWER_BOUND = 2;
+        public const int UP_TO_TEN_TIMES_COEFFICIENT_UPPER_BOUND = 10;
 
         public const string BET = "bet";
         public const string WITHDRAW = "withdraw";

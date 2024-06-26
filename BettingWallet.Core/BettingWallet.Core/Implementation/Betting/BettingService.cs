@@ -1,4 +1,5 @@
 ﻿using BettingWallet.Core.Contracts;
+using static BettingWallet.Core.Constants;
 
 namespace BettingWallet.Core.Implementation.Betting
 {
@@ -35,9 +36,10 @@ namespace BettingWallet.Core.Implementation.Betting
         private (int coefficientLower, int coefficientUpper) GetCofficientRange(Outcome prediction)
             => prediction switch
             {
-                Outcome.WinUpToTwoTimes => (1, 2),
-                Outcome.WinUpToTenTimes => (2, 10),
-                _ => throw new ArgumentException("Not a valid bet outcome"),
+                Outcome.Loss => (0, 0),
+                Outcome.WinUpToTwoTimes => (UP_TO_TWO_TIMES_COEFFICIENT_LOWER_BOUND, UP_TO_TWO_TIMES_COEFFICIENT_UPPER_BOUND),
+                Outcome.WinUpToTenTimes => (UP_TO_TEN_TIMES_COEFFICIENT_LOWER_BOUND, UP_TO_TEN_TIMES_COEFFICIENT_UPPER_BOUND),
+                _ => throw new ArgumentException("Invalid bet outcome"),
             };
     }
 }
